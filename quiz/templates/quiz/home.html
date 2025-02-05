@@ -1,0 +1,27 @@
+{% extends "quiz/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h1 style="text-align: center;">QUIZ APPLICATION</h1>
+    <form>
+        {{form|crispy}}
+        <label for="topic_name">Select a Topic:</label>
+        <select name="topic-name">
+            <option value="Harry Potter">Harry Potter</option>
+            <option value="Avengers">Avengers</option>
+            <option value="Indian Politics">Indian Politics</option>
+            <option value="Physics">Physics</option>
+        </select><br><br>
+        {% comment %} <input type="text" placeholder="Enter a topic name" name="topic-name"><br><br> {% endcomment %}
+        <label for="rating">Rating for this topis is: {{quiz.rating}}</label><br><br>
+        <label for="rating">Accuracy for this topis is: {{quiz.quiz_acuracy}}%</label><br><br>
+        <label for="difficulty_level">Select Difficulty Level:</label>
+        <select name="difficulty-level">
+            <option value="E">Easy</option>
+            <option value="M">Medium</option>
+            <option value="H">Hard</option>
+            <option value="X">Expert</option>
+        </select>
+        <br><br>
+        <button type="submit" >PLAY</button>
+    </form>
+{% endblock content %} 
