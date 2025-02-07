@@ -1,0 +1,31 @@
+{% extends "quiz/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <h1 style="text-align: center;">QUIZ APPLICATION</h1>
+        <form method="POST">
+        {% csrf_token %}        
+        <fieldset class="form-group">
+            {{ form.quiz_id|as_crispy_field }}
+            <br>
+            <label for="difficulty_level">Select Difficulty Level:</label>
+            <select name="difficulty-level">
+                <option value="E">Easy</option>
+                <option value="M">Medium</option>
+                <option value="H">Hard</option>
+                <option value="X">Expert</option>
+            </select><br><br>
+            <label for="rating">Rating for this topis is: {{form.quiz_id.rating}}</label><br><br>
+            <label for="rating">Accuracy for this topis is: {{quiz.quiz_acuracy}}%</label><br><br>
+            
+            <button type="submit">PLAY</button> 
+        </fieldset>
+    </form>
+</div>
+{% endblock content %}
+
+
+
+
+
+
