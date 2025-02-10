@@ -1,0 +1,12 @@
+{% extends "quiz/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <h2 style="text-align:center">Quiz History</h2>
+        <form method="POST">
+            {% csrf_token %}     
+        {{ form.quiz_id|as_crispy_field }}
+        <button type="submit">View History</button>
+        </form>
+    </div>
+{% endblock %}

@@ -32,12 +32,13 @@ class Quiz(models.Model):
 class Question(models.Model):
        question_id=models.BigAutoField(primary_key=True)
        quiz_id=models.ForeignKey(Topic,on_delete=models.CASCADE)
-       question=models.CharField(max_length=200)
+       question=models.CharField(max_length=400)
        optionA=models.CharField(max_length=200)
        optionB=models.CharField(max_length=200)
        optionC=models.CharField(max_length=200)
        optionD=models.CharField(max_length=200)
        correct_ans=models.CharField(max_length=200)
+       
 
        def __str__(self):
              return self.question
@@ -74,13 +75,16 @@ class Point(models.Model):
 
 
 class Attempt(models.Model):
-    user_id=models.ForeignKey(User,on_delete=models.CASCADE)
-    quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
-    number_of_attempt=models.IntegerField()
-    best_point=models.DecimalField(max_digits=10,decimal_places=3)
+      user_id=models.ForeignKey(User,on_delete=models.CASCADE)
+      quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+      number_of_attempt=models.IntegerField()
+      best_point=models.DecimalField(max_digits=10,decimal_places=3)
+      class Meta:
+            unique_together=("user_id","quiz_id")
 
-    class Meta:
-          unique_together=("user_id","quiz_id")
+      def __str__(self):
+            return self.user_id.username
+
 
 class Global_Points(models.Model):
     user_id=models.ForeignKey(User,on_delete=models.CASCADE,primary_key=True)

@@ -167,7 +167,7 @@ def user_response(qsn_ans,user,quiz,total_attempt):
                 question_response_time=10,
                 quiz_id=quiz,
                 attempt_number=total_attempt
-            ).save()
+            )
             
         
         
@@ -180,3 +180,66 @@ def pagination_on_questions(quiz_id,page):
     paginator = Paginator(questions, 1) 
     page_number = page
     return paginator.get_page(page_number)
+
+
+
+def quiz_history(request):
+   
+   if request.method == "POST":    
+        print(request.POST)
+        form = TopicForm(request.POST)  
+        return redirect('quiz_history_table',quiz_id=int(request.POST['quiz_id']))  
+
+   else:  
+        form = TopicForm()  
+    
+   return render(request,'quiz/quiz_history.html',{'form': form})  
+
+@login_required
+def quiz_history_table(request,quiz_id):
+
+
+    if request.user.is_authenticated:
+                user_id = request.user.id
+
+  
+    user_quiz_history_table = Point.objects.filter(user_id=user_id, quiz_id=quiz_id).order_by('-attempt_number')
+    print(user_quiz_history_table)
+
+    if not user_quiz_history_table.exists():
+        print("No records found.")  # Debugging statement
+
+    for response in user_quiz_history_table:
+        print("Attempt:",response.attempt_number) 
+        print("Points scored :",response.quiz_points)
+        print("Time Taken :",response.quiz_time)
+
+    return render(request,'quiz/quiz_history_table.html',{'user_quiz_history_table': user_quiz_history_table,'quiz_id':quiz_id})
+    
+@login_required
+def view_attempt_response(request,quiz_id,attempt_number):
+    # user_id=1
+    # quiz_id=8
+    # attempt_number=2
+    
+    if request.user.is_authenticated:
+                user_id = request.user.id
+
+    view_attempt_response=UserResponse.objects.filter(user_id=user_id,quiz_id=quiz_id,attempt_number=attempt_number)
+
+    for response in view_attempt_response:
+        print("Question:",response.question_id.question)  # Adjust based on model fields
+        print("Your response :",response.user_ans)
+        print("Correct response :",response.question_id.correct_ans )
+
+
+    form=TopicForm()
+    return render(request,'quiz/view_attempt_response.html',{'view_attempt_response': view_attempt_response})
+    
+
+
+    
+
+
+
+    

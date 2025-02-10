@@ -26,10 +26,11 @@
                       <form method="POST" action="{% url 'logout' %}">
                           {% csrf_token %}
                           <div class="left-header">
-
-                          <button class="nav-item nav-link text-dark" type="submit">Logout</button>
-                        <a  class="nav-item nav-link text-dark" href="{% url 'global_leaderboard' %}">Leaderboard</a>
-                            <div/>
+                            <a  class="nav-item nav-link text-dark" href="{% url 'quiz-home' %}">Home</a>
+                            <a  class="nav-item nav-link text-dark" href="{% url 'global_leaderboard' %}">Leaderboard</a>
+                            <a  class="nav-item nav-link text-dark" href="{% url 'quizhistory' %}">Profile</a>
+                            <button class="logout nav-item nav-link text-dark" type="submit">Logout</button>
+                          <div/>
                       </form>
                   {% else %}
                       <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
