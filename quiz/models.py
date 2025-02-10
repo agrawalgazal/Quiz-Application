@@ -46,10 +46,13 @@ class UserResponse(models.Model):
       user_response_id = models.AutoField(primary_key=True)
       user_ans=models.CharField(max_length=200)
       question_response_time=models.IntegerField()
-      user_id=models.ForeignKey(User,on_delete=models.CASCADE)
+      user=models.ForeignKey(User,on_delete=models.CASCADE)
       quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
       question_id=models.ForeignKey(Question,on_delete=models.CASCADE)
-    #   attempt_number
+      attempt_number=models.IntegerField()
+      class Meta:
+            unique_together=("user","quiz_id","question_id","attempt_number")
+
       def __str__(self):
            return f"{self.question_id.question}  response is {self.user_ans}"
 
@@ -60,7 +63,7 @@ class Point(models.Model):
       user_id=models.ForeignKey(User,on_delete=models.CASCADE)
       quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
       attempt_number=models.IntegerField()
-      quiz_points=models.IntegerField()
+      quiz_points=models.DecimalField(max_digits=10,decimal_places=3)
       quiz_time=models.IntegerField()
 
       class Meta:
@@ -74,14 +77,15 @@ class Attempt(models.Model):
     user_id=models.ForeignKey(User,on_delete=models.CASCADE)
     quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
     number_of_attempt=models.IntegerField()
-    best_point=models.IntegerField()
+    best_point=models.DecimalField(max_digits=10,decimal_places=3)
 
     class Meta:
           unique_together=("user_id","quiz_id")
 
 class Global_Points(models.Model):
-    user_id=models.ForeignKey(User,on_delete=models.CASCADE)
-    total_points=models.IntegerField()
+    user_id=models.ForeignKey(User,on_delete=models.CASCADE,primary_key=True)
+    total_points=models.DecimalField(max_digits=10,decimal_places=3)
+
 
 
 
