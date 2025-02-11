@@ -1,8 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+from .validators import validate_levels,validate_user_answer,validate_topic_name,validate_attempt
 
-import datetime
 
 
 class Topic(models.Model):
@@ -13,9 +13,9 @@ class Topic(models.Model):
         ('X','Expert')
         ]
     quiz_id=models.BigAutoField(primary_key=True)
-    topic_name=models.CharField(max_length=70)
+    topic_name=models.CharField(max_length=70,validators=[validate_topic_name])
     rating=models.DecimalField(max_digits=2,decimal_places=1,validators=[MinValueValidator(0.0),MaxValueValidator(5.0)])
-    difficulty_level=models.CharField(max_length=1, choices=levels, default='E')
+    difficulty_level=models.CharField(max_length=1, choices=levels, default='E',validators=[validate_levels])
 
     def __str__(self):
         return self.topic_name
@@ -45,12 +45,12 @@ class Question(models.Model):
        
 class UserResponse(models.Model):
       user_response_id = models.AutoField(primary_key=True)
-      user_ans=models.CharField(max_length=200)
+      user_ans=models.CharField(max_length=200,validators=[validate_user_answer])
       question_response_time=models.IntegerField()
       user=models.ForeignKey(User,on_delete=models.CASCADE)
       quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
       question_id=models.ForeignKey(Question,on_delete=models.CASCADE)
-      attempt_number=models.IntegerField()
+      attempt_number=models.IntegerField(validators=[validate_attempt])
       class Meta:
             unique_together=("user","quiz_id","question_id","attempt_number")
 
@@ -58,7 +58,6 @@ class UserResponse(models.Model):
            return f"{self.question_id.question}  response is {self.user_ans}"
 
 
-             
 
 class Point(models.Model):
       user_id=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -77,7 +76,7 @@ class Point(models.Model):
 class Attempt(models.Model):
       user_id=models.ForeignKey(User,on_delete=models.CASCADE)
       quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
-      number_of_attempt=models.IntegerField()
+      number_of_attempt=models.IntegerField(validators=[validate_attempt])
       best_point=models.DecimalField(max_digits=10,decimal_places=3)
       class Meta:
             unique_together=("user_id","quiz_id")
