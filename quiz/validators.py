@@ -1,8 +1,9 @@
 from django.core.exceptions import ValidationError
+from django.shortcuts import render, redirect  
 
 
 def validate_levels(value):
-
+   
 
     if value!='E' and value!='M' and value!='H' and value!='X':
         raise ValidationError("not a valid level")
@@ -26,6 +27,10 @@ def validate_attempt(value):
 
     if value<0:
         raise ValidationError("attempt can't be negative")
+    
+
+
+    
 
 
 

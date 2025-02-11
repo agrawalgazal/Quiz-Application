@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from django.db.models import F
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 
 
 
@@ -16,7 +17,18 @@ from django.core.exceptions import ObjectDoesNotExist
 @login_required
 def home(request):
     if request.method == "POST":    
-        form = TopicForm(request.POST)  
+        form = TopicForm(request.POST) 
+        quiz_id=request.POST['quiz_id']
+        quiz = Quiz.objects.get(quiz_id=quiz_id)
+        topic_name_last_char=quiz.quiz_id.topic_name[-1]
+        diff_level=request.POST['difficulty-level']
+     
+        print(request.POST['quiz_id'],request.POST['difficulty-level'])
+        print(quiz.quiz_id.topic_name[-1])   
+        if(topic_name_last_char!=diff_level):
+                  messages.warning(request, "select appopriate difficulty level")
+                  return redirect('quiz-home')
+
         return redirect('quiz',quiz_id=int(request.POST['quiz_id']))  
 
     else:  
@@ -27,8 +39,8 @@ def home(request):
 def quiz_topic(request):  
     if request.method == "POST":  
         form = TopicForm(request.POST)
-        return redirect('/')  
-          
+        
+       
     else:  
         form = TopicForm()  
     return render(request,'quiz/quiz_topic.html',{'form': form})  
@@ -100,10 +112,10 @@ def update_attempt(user,quiz,total_attempt,total_points):
         attempt.number_of_attempt = total_attempt
         
         if total_points > attempt.best_point:  
-            Global_Points.objects.update(
-                total_points=F('total_points') + (total_points - attempt.best_point)
-            )
-
+            global_points=Global_Points.objects.get(user_id=user)
+            old_points=global_points.total_points
+            global_points.total_points=(old_points)+(total_points - attempt.best_point)
+            global_points.save()
             attempt.best_point = total_points
             
         attempt.save()
@@ -121,8 +133,7 @@ def update_attempt(user,quiz,total_attempt,total_points):
         except ObjectDoesNotExist:
             global_points = None  
 
-        
-        
+    
         
         if  global_points is None:
             Global_Points.objects.create(
@@ -130,9 +141,11 @@ def update_attempt(user,quiz,total_attempt,total_points):
                     total_points=total_points
             ).save() 
         else :
-            Global_Points.objects.update(
-                total_points=F('total_points') + total_points
-            )
+            global_points=Global_Points.objects.get(user_id=user)
+            old_points=global_points.total_points
+            global_points.total_points=(old_points)+total_points
+            global_points.save()
+
 
 
              
@@ -182,7 +195,7 @@ def pagination_on_questions(quiz_id,page):
     return paginator.get_page(page_number)
 
 
-
+@login_required
 def quiz_history(request):
    
    if request.method == "POST":    
@@ -218,9 +231,6 @@ def quiz_history_table(request,quiz_id):
     
 @login_required
 def view_attempt_response(request,quiz_id,attempt_number):
-    # user_id=1
-    # quiz_id=8
-    # attempt_number=2
     
     if request.user.is_authenticated:
                 user_id = request.user.id
