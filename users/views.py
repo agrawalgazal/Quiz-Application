@@ -4,8 +4,10 @@ from .forms import UserRegisterForm
 from .models import UserProfile
 
 
+
 def register(request):
     if request.method == 'POST':
+        # print("hello")
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user=form.save()
@@ -19,5 +21,9 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
+
+
+
+
 
 

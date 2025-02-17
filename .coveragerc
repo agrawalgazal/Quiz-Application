@@ -1,0 +1,6 @@
+[run]
+omit =
+    */tests/*  # Ignore all files in the tests folder
+    */migrations/*  # Ignore Django migrations
+
+[report]

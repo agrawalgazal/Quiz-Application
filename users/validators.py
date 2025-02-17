@@ -46,6 +46,7 @@ VALID_CITIES=[
 
 
 def validate_city(value):
+        print(value)
         if len(value)>100:
             raise ValidationError("City name exceeded maximum limit.")
         if value.title() not in VALID_CITIES:

@@ -7,9 +7,6 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def quiz_leaderboard(request,quiz_id):
   
-    if not quiz_id:
-        return render(request, 'leaderboard/leaderboard.html', {"error": "Quiz ID is required"})
-
     rank_list = Attempt.objects.filter(quiz_id=quiz_id).order_by('-best_point')
 
     return render(request, 'leaderboard/leaderboard.html', {'rank_list': rank_list})

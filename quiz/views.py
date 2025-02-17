@@ -35,15 +35,7 @@ def home(request):
         form = TopicForm()  
     return render(request,'quiz/home.html',{'form': form})  
 
-@login_required
-def quiz_topic(request):  
-    if request.method == "POST":  
-        form = TopicForm(request.POST)
-        
-       
-    else:  
-        form = TopicForm()  
-    return render(request,'quiz/quiz_topic.html',{'form': form})  
+
 
 qsn_ans={}
 
@@ -58,10 +50,12 @@ def question_list(request,quiz_id):
    
     if request.method=="POST":
         tmp=request.POST.dict()
+        # print(tmp)
         
         qsn_ans[tmp['question_id']]=tmp['option']
        
         if page_obj.has_next():
+            print("yess")
            
             next_page = page_obj.next_page_number()
             base_url = reverse('quiz', kwargs={'quiz_id': quiz_id}) 
@@ -110,7 +104,7 @@ def update_attempt(user,quiz,total_attempt,total_points):
     try:
         attempt = Attempt.objects.get(user_id=user, quiz_id=quiz)
         attempt.number_of_attempt = total_attempt
-        
+        print(total_points)
         if total_points > attempt.best_point:  
             global_points=Global_Points.objects.get(user_id=user)
             old_points=global_points.total_points
@@ -245,11 +239,4 @@ def view_attempt_response(request,quiz_id,attempt_number):
 
     form=TopicForm()
     return render(request,'quiz/view_attempt_response.html',{'view_attempt_response': view_attempt_response})
-    
-
-
-    
-
-
-
     

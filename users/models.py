@@ -10,3 +10,9 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
     
+    def getusercity(self):
+        return self.city
+    
+    
+    
+
